@@ -835,6 +835,9 @@
       let stars = [];
       let moonBase = 1.5;
       let dotTex, sparkleTex, glowTex, lanternFaceTex, lanternGlowMat;
+      let playlist = [];
+      let currentTrackIndex = 0;
+      let isHandlingError = false;
 
       fillText();
       buildFlow();
@@ -903,10 +906,6 @@
       }
 
       /* ── Playlist nhạc nền ── */
-      let playlist = [];
-      let currentTrackIndex = 0;
-      let isHandlingError = false;
-
       function initPlaylist() {
         playlist = [];
         if (CONFIG.music) playlist.push(CONFIG.music);

@@ -754,6 +754,12 @@
         myName: "Em iu của chị",
         startDate: "2026-08-09",
         music: "",
+        musicList: [
+          "https://assets.mixkit.co/music/preview/mixkit-sweet-love-121.mp3",
+          "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3",
+          "https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3",
+          "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-gospel-122.mp3"
+        ],
         photos: [
           {
             src: "./3.jpg",
@@ -897,20 +903,66 @@
         return shot;
       }
 
+      let playlist = [];
+      let currentTrackIndex = 0;
+
+      function initPlaylist() {
+        playlist = [];
+        if (CONFIG.music) {
+          playlist.push(CONFIG.music);
+        }
+        if (Array.isArray(CONFIG.musicList)) {
+          CONFIG.musicList.forEach((url) => {
+            if (url && !playlist.includes(url)) playlist.push(url);
+          });
+        }
+        if (playlist.length === 0) {
+          playlist = [
+            "https://assets.mixkit.co/music/preview/mixkit-sweet-love-121.mp3",
+            "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3",
+            "https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3"
+          ];
+        }
+      }
+
       function bindEvents() {
         const stage = $("#stage");
         $("#openBtn").addEventListener("click", openGift);
         $("#lightbox").addEventListener("click", closeLightbox);
-        $("#musicBtn").addEventListener("click", () =>
-          setMusic(!state.musicOn),
-        );
+
+        const musicBtn = $("#musicBtn");
+        let clickTimer = null;
+        musicBtn.addEventListener("click", () => {
+          if (clickTimer === null) {
+            clickTimer = setTimeout(() => {
+              clickTimer = null;
+              setMusic(!state.musicOn);
+            }, 250);
+          } else {
+            clearTimeout(clickTimer);
+            clickTimer = null;
+            nextTrack();
+          }
+        });
+
         stage.addEventListener("pointerdown", onTapStart);
         stage.addEventListener("pointerup", onTapEnd);
         addEventListener("pointermove", onPointerMove);
         addEventListener("keydown", onKey);
         addEventListener("resize", onResize);
-        if (CONFIG.music) $("#bgm").src = CONFIG.music;
-        else $("#musicBtn").hidden = true;
+
+        initPlaylist();
+
+        const audio = $("#bgm");
+        audio.addEventListener("ended", () => {
+          nextTrack();
+        });
+        audio.addEventListener("error", () => {
+          handleMusicError();
+        });
+
+        musicBtn.hidden = false;
+        musicBtn.title = "Bấm 1 lần: Bật/Tắt nhạc | Bấm 2 lần: Đổi bài nhạc";
       }
 
       function startScene() {
@@ -928,7 +980,7 @@
         window.scrollTo(0, 0);
         document.body.classList.add("opened");
         $("#intro").classList.add("gone");
-        if (CONFIG.music) setMusic(true);
+        setMusic(true);
         burst(innerWidth / 2, innerHeight / 2, 16);
         setTimeout(() => $("#intro").remove(), 1300);
       }
@@ -942,6 +994,46 @@
         $("#lightbox").classList.remove("open");
       }
 
+      function handleMusicError() {
+        if (playlist.length === 0) return;
+        const failedUrl = playlist[currentTrackIndex];
+        console.warn("Bài nhạc không khả dụng, gỡ khỏi danh sách:", failedUrl);
+        playlist.splice(currentTrackIndex, 1);
+
+        if (playlist.length === 0) {
+          showToast("Không có bài nhạc nào khả dụng.");
+          paintMusic(false);
+          return;
+        }
+
+        if (currentTrackIndex >= playlist.length) {
+          currentTrackIndex = 0;
+        }
+
+        showToast("Nhạc bị lỗi, đang tự động đổi bài khác...");
+        playCurrentTrack();
+      }
+
+      function nextTrack() {
+        if (playlist.length === 0) return;
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        showToast(`Đổi bài nhạc (${currentTrackIndex + 1}/${playlist.length}) ♪`);
+        playCurrentTrack();
+      }
+
+      function playCurrentTrack() {
+        const audio = $("#bgm");
+        if (playlist.length === 0) return;
+        audio.src = playlist[currentTrackIndex];
+        audio
+          .play()
+          .then(() => paintMusic(true))
+          .catch((err) => {
+            console.warn("Lỗi phát nhạc:", err);
+            handleMusicError();
+          });
+      }
+
       function setMusic(on) {
         const audio = $("#bgm");
         if (!on) {
@@ -949,10 +1041,16 @@
           paintMusic(false);
           return;
         }
-        audio
-          .play()
-          .then(() => paintMusic(true))
-          .catch(() => paintMusic(false));
+        if (!audio.src || audio.src === window.location.href) {
+          playCurrentTrack();
+        } else {
+          audio
+            .play()
+            .then(() => paintMusic(true))
+            .catch(() => {
+              playCurrentTrack();
+            });
+        }
       }
 
       function paintMusic(on) {

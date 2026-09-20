@@ -755,10 +755,11 @@
         startDate: "2026-08-09",
         music: "",
         musicList: [
-          "https://assets.mixkit.co/music/preview/mixkit-sweet-love-121.mp3",
-          "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3",
-          "https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3",
-          "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-gospel-122.mp3"
+          "https://cdn.pixabay.com/audio/2024/09/10/audio_6e1a6a1fc8.mp3",
+          "https://cdn.pixabay.com/audio/2024/01/10/audio_d3e55e2580.mp3",
+          "https://cdn.pixabay.com/audio/2023/10/18/audio_4e0e6e9abf.mp3",
+          "https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3",
+          "https://cdn.pixabay.com/audio/2024/11/04/audio_4956b4edd1.mp3"
         ],
         photos: [
           {
@@ -903,26 +904,48 @@
         return shot;
       }
 
+      /* ── Playlist nhạc nền ── */
       let playlist = [];
       let currentTrackIndex = 0;
 
       function initPlaylist() {
         playlist = [];
-        if (CONFIG.music) {
-          playlist.push(CONFIG.music);
-        }
+        if (CONFIG.music) playlist.push(CONFIG.music);
         if (Array.isArray(CONFIG.musicList)) {
           CONFIG.musicList.forEach((url) => {
             if (url && !playlist.includes(url)) playlist.push(url);
           });
         }
+      }
+
+      function playCurrentTrack() {
+        const audio = $("#bgm");
+        if (playlist.length === 0) return;
+        audio.src = playlist[currentTrackIndex];
+        audio.play()
+          .then(() => paintMusic(true))
+          .catch(() => handleMusicError());
+      }
+
+      function handleMusicError() {
+        if (playlist.length === 0) { paintMusic(false); return; }
+        console.warn("Nhạc lỗi, bỏ bài:", playlist[currentTrackIndex]);
+        playlist.splice(currentTrackIndex, 1);
         if (playlist.length === 0) {
-          playlist = [
-            "https://assets.mixkit.co/music/preview/mixkit-sweet-love-121.mp3",
-            "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3",
-            "https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3"
-          ];
+          showToast("Không có bài nhạc nào khả dụng 😢");
+          paintMusic(false);
+          return;
         }
+        if (currentTrackIndex >= playlist.length) currentTrackIndex = 0;
+        showToast("Nhạc lỗi, đang đổi bài khác... ♪");
+        playCurrentTrack();
+      }
+
+      function nextTrack() {
+        if (playlist.length === 0) return;
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        showToast(`Đổi bài (${currentTrackIndex + 1}/${playlist.length}) ♪`);
+        playCurrentTrack();
       }
 
       function bindEvents() {
@@ -930,18 +953,14 @@
         $("#openBtn").addEventListener("click", openGift);
         $("#lightbox").addEventListener("click", closeLightbox);
 
+        /* Bấm 1 lần: bật/tắt | Bấm đúp: đổi bài */
         const musicBtn = $("#musicBtn");
         let clickTimer = null;
         musicBtn.addEventListener("click", () => {
           if (clickTimer === null) {
-            clickTimer = setTimeout(() => {
-              clickTimer = null;
-              setMusic(!state.musicOn);
-            }, 250);
+            clickTimer = setTimeout(() => { clickTimer = null; setMusic(!state.musicOn); }, 280);
           } else {
-            clearTimeout(clickTimer);
-            clickTimer = null;
-            nextTrack();
+            clearTimeout(clickTimer); clickTimer = null; nextTrack();
           }
         });
 
@@ -952,17 +971,11 @@
         addEventListener("resize", onResize);
 
         initPlaylist();
-
         const audio = $("#bgm");
-        audio.addEventListener("ended", () => {
-          nextTrack();
-        });
-        audio.addEventListener("error", () => {
-          handleMusicError();
-        });
-
+        audio.addEventListener("ended", () => nextTrack());
+        audio.addEventListener("error", () => handleMusicError());
         musicBtn.hidden = false;
-        musicBtn.title = "Bấm 1 lần: Bật/Tắt nhạc | Bấm 2 lần: Đổi bài nhạc";
+        musicBtn.title = "1 lần: Bật/Tắt nhạc • 2 lần: Đổi bài";
       }
 
       function startScene() {
@@ -994,46 +1007,6 @@
         $("#lightbox").classList.remove("open");
       }
 
-      function handleMusicError() {
-        if (playlist.length === 0) return;
-        const failedUrl = playlist[currentTrackIndex];
-        console.warn("Bài nhạc không khả dụng, gỡ khỏi danh sách:", failedUrl);
-        playlist.splice(currentTrackIndex, 1);
-
-        if (playlist.length === 0) {
-          showToast("Không có bài nhạc nào khả dụng.");
-          paintMusic(false);
-          return;
-        }
-
-        if (currentTrackIndex >= playlist.length) {
-          currentTrackIndex = 0;
-        }
-
-        showToast("Nhạc bị lỗi, đang tự động đổi bài khác...");
-        playCurrentTrack();
-      }
-
-      function nextTrack() {
-        if (playlist.length === 0) return;
-        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-        showToast(`Đổi bài nhạc (${currentTrackIndex + 1}/${playlist.length}) ♪`);
-        playCurrentTrack();
-      }
-
-      function playCurrentTrack() {
-        const audio = $("#bgm");
-        if (playlist.length === 0) return;
-        audio.src = playlist[currentTrackIndex];
-        audio
-          .play()
-          .then(() => paintMusic(true))
-          .catch((err) => {
-            console.warn("Lỗi phát nhạc:", err);
-            handleMusicError();
-          });
-      }
-
       function setMusic(on) {
         const audio = $("#bgm");
         if (!on) {
@@ -1044,12 +1017,9 @@
         if (!audio.src || audio.src === window.location.href) {
           playCurrentTrack();
         } else {
-          audio
-            .play()
+          audio.play()
             .then(() => paintMusic(true))
-            .catch(() => {
-              playCurrentTrack();
-            });
+            .catch(() => playCurrentTrack());
         }
       }
 

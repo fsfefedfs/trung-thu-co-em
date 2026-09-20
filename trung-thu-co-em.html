@@ -1,0 +1,1717 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#050404" />
+    <title>Trung Thu có Gomii 🎀✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600;1,700&family=Playpen+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --night: #050404;
+        --panel: rgba(14, 10, 6, 0.84);
+        --gold: #e8c46a;
+        --gold-hi: #fbe9b0;
+        --gold-lo: #a87b24;
+        --cream: #fff1d0;
+        --ink: #3a220d;
+        --blush: #ff9fb2;
+        --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+        --cute: "Playpen Sans", "Comic Sans MS", "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body,
+      * {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      ::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+        background: transparent;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--night);
+        color: var(--cream);
+        font-family: var(--cute);
+        line-height: 1.7;
+        overflow-x: hidden;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body:not(.opened) {
+        overflow: hidden;
+      }
+
+      button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        cursor: pointer;
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--gold-hi);
+        outline-offset: 3px;
+      }
+
+      #stage {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        touch-action: pan-y;
+      }
+      #stage canvas {
+        display: block;
+      }
+
+      .gold-text {
+        background: linear-gradient(
+          180deg,
+          var(--gold-hi) 5%,
+          var(--gold) 55%,
+          var(--gold-lo)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 3px 16px rgba(232, 196, 106, 0.28));
+      }
+
+      .intro {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        text-align: center;
+        background:
+          radial-gradient(1.5px 1.5px at 12% 22%, #f3d98b 50%, transparent 51%),
+          radial-gradient(1.5px 1.5px at 84% 16%, #f3d98b 50%, transparent 51%),
+          radial-gradient(2px 2px at 72% 68%, #f3d98b 50%, transparent 51%),
+          radial-gradient(1.5px 1.5px at 20% 78%, #f3d98b 50%, transparent 51%),
+          radial-gradient(1.5px 1.5px at 92% 88%, #f3d98b 50%, transparent 51%),
+          radial-gradient(2px 2px at 40% 10%, #f3d98b 50%, transparent 51%),
+          radial-gradient(circle at 50% 38%, #1c1408 0, var(--night) 62%);
+        transition:
+          opacity 1.1s ease,
+          visibility 0s 1.1s;
+      }
+
+      .intro.gone {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .intro-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 22px;
+      }
+
+      .intro-lantern {
+        width: 132px;
+        height: auto;
+        transform-origin: 50% 0;
+        animation: sway 3.6s ease-in-out infinite;
+        filter: drop-shadow(0 0 28px rgba(232, 170, 60, 0.55));
+      }
+
+      .intro-line {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 600;
+        font-size: clamp(1.5rem, 6vw, 2.2rem);
+        line-height: 1.4;
+        color: var(--gold-hi);
+      }
+
+      .intro-line strong {
+        font-family: var(--cute);
+        font-style: normal;
+        font-weight: 700;
+        color: var(--gold);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 30px;
+        border-radius: 999px;
+        background: linear-gradient(
+          180deg,
+          var(--gold-hi),
+          var(--gold) 55%,
+          var(--gold-lo)
+        );
+        color: var(--ink);
+        font-weight: 700;
+        font-size: 1.05rem;
+        box-shadow:
+          0 0 0 3px var(--night),
+          0 0 0 5px rgba(232, 196, 106, 0.55),
+          0 8px 24px rgba(232, 196, 106, 0.25);
+        transition: transform 0.15s ease;
+      }
+
+      .btn:active {
+        transform: scale(0.96);
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 1.6s ease 0.3s;
+        padding-bottom: calc(50px + env(safe-area-inset-bottom, 0px));
+      }
+
+      .opened .content {
+        opacity: 1;
+      }
+
+      .content button {
+        pointer-events: auto;
+      }
+
+      .hero {
+        min-height: 100vh;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        text-align: center;
+        padding: 0 20px calc(6vh + env(safe-area-inset-bottom, 0px));
+      }
+
+      .hero-title {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 700;
+        font-size: clamp(2.7rem, 10vw, 5.4rem);
+        line-height: 1.05;
+      }
+
+      .hero-name {
+        margin-top: 6px;
+        font-weight: 700;
+        font-size: clamp(1.3rem, 5vw, 1.9rem);
+      }
+
+      .counter {
+        margin-top: 16px;
+        padding: 8px 22px;
+        border: 2px solid var(--gold-lo);
+        border-radius: 999px;
+        background: rgba(5, 4, 4, 0.72);
+        font-size: clamp(0.95rem, 3.4vw, 1.1rem);
+      }
+
+      .counter b {
+        padding: 0 0.15em;
+        font-family: var(--serif);
+        font-size: 1.6em;
+        font-weight: 700;
+        color: var(--gold);
+      }
+
+      .hint {
+        margin-top: 14px;
+        font-size: 0.9rem;
+        color: rgba(255, 241, 208, 0.72);
+      }
+
+      .cue {
+        margin-top: 20px;
+        width: 14px;
+        height: 14px;
+        border-right: 3px solid var(--gold);
+        border-bottom: 3px solid var(--gold);
+        transform: rotate(45deg);
+        animation: cue 1.8s ease-in-out infinite;
+      }
+
+      .flow {
+        display: flex;
+        flex-direction: column;
+        width: min(100%, 720px);
+        margin: 0 auto;
+        padding-top: 8vh;
+      }
+
+      .fall .w {
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .fall .u {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(-1.4em);
+        filter: blur(6px);
+      }
+      .fall.in .u {
+        animation: drip 0.95s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+        animation-delay: var(--d);
+      }
+
+      .wish,
+      .cap,
+      .letter-title,
+      .letter-line,
+      .signature,
+      .foot-line {
+        text-shadow:
+          0 0 14px #000,
+          0 2px 26px #000;
+      }
+
+      .wish {
+        max-width: 20em;
+        margin: 0 auto;
+        padding: 9vh 24px;
+        text-align: center;
+        font-weight: 500;
+        font-size: clamp(1.3rem, 5.4vw, 2rem);
+        line-height: 1.6;
+      }
+
+      .wish.gold {
+        color: var(--gold-hi);
+      }
+
+      .shot {
+        position: relative;
+        width: min(74vw, 330px);
+        margin: 8vh 0;
+        padding-top: 70px;
+        pointer-events: auto;
+        cursor: zoom-in;
+        opacity: 0;
+        transform-origin: 50% 0;
+        transform: rotate(var(--tilt));
+      }
+
+      .shot.left {
+        align-self: flex-start;
+        margin-left: clamp(20px, 8vw, 90px);
+      }
+      .shot.right {
+        align-self: flex-end;
+        margin-right: clamp(20px, 8vw, 90px);
+      }
+
+      .shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 24px;
+        box-shadow:
+          0 14px 44px rgba(0, 0, 0, 0.65),
+          0 0 36px rgba(232, 196, 106, 0.2);
+      }
+
+      .shot::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 2px;
+        height: 64px;
+        margin-left: -1px;
+        background: linear-gradient(var(--gold-hi), var(--gold-lo));
+        transform-origin: 50% 0;
+        transform: scaleY(0);
+      }
+
+      .shot::after {
+        content: "♥";
+        position: absolute;
+        top: 52px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 18px;
+        line-height: 1;
+        color: var(--gold);
+        text-shadow: 0 0 10px rgba(232, 196, 106, 0.6);
+        opacity: 0;
+      }
+
+      .shot.in {
+        animation:
+          hang 1.5s cubic-bezier(0.22, 1.15, 0.36, 1) forwards,
+          swing 6s ease-in-out 1.5s infinite;
+      }
+      .shot.in::before {
+        animation: thread 0.8s ease-out 0.2s forwards;
+      }
+      .shot.in::after {
+        animation: appear 0.4s ease 1s forwards;
+      }
+
+      .cap {
+        margin-top: 18px;
+        text-align: center;
+        font-size: 1.05rem;
+        line-height: 1.6;
+      }
+
+      .letter-title {
+        padding: 14vh 24px 4vh;
+        text-align: center;
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 700;
+        font-size: clamp(2.4rem, 9vw, 4rem);
+        line-height: 1.15;
+        color: var(--gold);
+      }
+
+      .letter-line {
+        max-width: 26em;
+        margin: 0 auto 1.6em;
+        padding: 0 24px;
+        text-align: center;
+        font-size: clamp(1.02rem, 3.8vw, 1.2rem);
+        line-height: 2;
+      }
+
+      .signature {
+        width: min(100%, 26em);
+        margin: 0 auto;
+        padding: 0 24px;
+        text-align: right;
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 700;
+        font-size: 2rem;
+        color: var(--gold);
+      }
+
+      .foot-line {
+        padding: 14vh 24px 0;
+        text-align: center;
+        font-size: 1.05rem;
+        color: rgba(255, 241, 208, 0.82);
+      }
+
+      .toast {
+        position: fixed;
+        top: calc(14px + env(safe-area-inset-top, 0px));
+        left: 50%;
+        z-index: 40;
+        max-width: min(90vw, 420px);
+        padding: 12px 20px;
+        border: 3px solid var(--gold);
+        border-radius: 22px;
+        background: var(--cream);
+        color: var(--ink);
+        font-weight: 700;
+        font-size: 0.98rem;
+        line-height: 1.55;
+        text-align: center;
+        box-shadow:
+          0 0 0 4px var(--night),
+          0 12px 30px rgba(0, 0, 0, 0.6);
+        transform: translate(-50%, -24px);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1),
+          opacity 0.25s ease;
+      }
+
+      .toast.show {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+
+      .music {
+        position: fixed;
+        right: calc(16px + env(safe-area-inset-right, 0px));
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        z-index: 41;
+        display: none;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        background: rgba(5, 4, 4, 0.78);
+        color: var(--gold);
+        font-size: 22px;
+      }
+
+      .opened .music:not([hidden]) {
+        display: grid;
+      }
+      .music.on {
+        background: var(--gold);
+        color: var(--ink);
+      }
+      .music.on span {
+        animation: bob 1.2s ease-in-out infinite;
+      }
+
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        background: rgba(3, 2, 2, 0.94);
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.25s ease,
+          visibility 0s 0.25s;
+      }
+
+      .lightbox.open {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.25s ease;
+      }
+
+      .lightbox img {
+        max-width: min(94vw, 720px);
+        max-height: 82vh;
+        border: 4px solid var(--gold);
+        border-radius: 18px;
+        box-shadow:
+          0 0 0 6px var(--night),
+          0 0 60px rgba(232, 196, 106, 0.25);
+      }
+
+      .lightbox .close {
+        position: absolute;
+        top: calc(14px + env(safe-area-inset-top, 0px));
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        color: var(--gold);
+        font-size: 26px;
+        line-height: 1;
+      }
+
+      .pop {
+        position: fixed;
+        z-index: 60;
+        pointer-events: none;
+        line-height: 1;
+        text-shadow: 0 0 10px currentColor;
+        animation: pop 1.3s ease-out forwards;
+      }
+
+      @keyframes sway {
+        0%,
+        100% {
+          transform: rotate(-5deg);
+        }
+        50% {
+          transform: rotate(5deg);
+        }
+      }
+      @keyframes drip {
+        0% {
+          opacity: 0;
+          transform: translateY(-1.4em) scaleY(1.6);
+          filter: blur(6px);
+        }
+        60% {
+          opacity: 1;
+          transform: translateY(0.1em) scaleY(0.9);
+          filter: blur(0);
+        }
+        100% {
+          opacity: 1;
+          transform: none;
+          filter: blur(0);
+        }
+      }
+      @keyframes hang {
+        0% {
+          opacity: 0;
+          transform: translateY(-170px) rotate(calc(var(--tilt) * -3));
+        }
+        55% {
+          opacity: 1;
+          transform: translateY(14px) rotate(calc(var(--tilt) * 1.6));
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) rotate(var(--tilt));
+        }
+      }
+      @keyframes swing {
+        0%,
+        100% {
+          transform: rotate(var(--tilt));
+        }
+        25% {
+          transform: rotate(calc(var(--tilt) + 1.5deg));
+        }
+        75% {
+          transform: rotate(calc(var(--tilt) - 1.5deg));
+        }
+      }
+      @keyframes thread {
+        to {
+          transform: scaleY(1);
+        }
+      }
+      @keyframes appear {
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes bob {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-3px);
+        }
+      }
+      @keyframes cue {
+        0%,
+        100% {
+          transform: translateY(0) rotate(45deg);
+        }
+        50% {
+          transform: translateY(6px) rotate(45deg);
+        }
+      }
+      @keyframes pop {
+        from {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(0.6);
+        }
+        to {
+          opacity: 0;
+          transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+            rotate(var(--rot)) scale(1.15);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-delay: 0s !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage" aria-hidden="true"></div>
+
+    <div class="intro" id="intro">
+      <div class="intro-card">
+        <svg class="intro-lantern" viewBox="0 0 120 156" aria-hidden="true">
+          <defs>
+            <radialGradient id="lg" cx="50%" cy="42%" r="62%">
+              <stop offset="0" stop-color="#ffd977" />
+              <stop offset="0.7" stop-color="#f0a830" />
+              <stop offset="1" stop-color="#c9791a" />
+            </radialGradient>
+          </defs>
+          <path
+            d="M60 2v20"
+            stroke="#e8c46a"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <rect x="42" y="20" width="36" height="11" rx="5" fill="#8a5312" />
+          <ellipse cx="60" cy="74" rx="47" ry="43" fill="url(#lg)" />
+          <path
+            d="M60 31C28 52 28 96 60 117M60 31C92 52 92 96 60 117"
+            fill="none"
+            stroke="#8a5312"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            opacity="0.7"
+          />
+          <rect x="42" y="117" width="36" height="10" rx="5" fill="#8a5312" />
+          <path
+            d="M60 127v18"
+            stroke="#e8c46a"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <circle cx="60" cy="149" r="5" fill="#ff9fb2" />
+          <circle cx="46" cy="70" r="4.6" fill="#3a220d" />
+          <circle cx="74" cy="70" r="4.6" fill="#3a220d" />
+          <circle cx="47.6" cy="68.4" r="1.6" fill="#fff" />
+          <circle cx="75.6" cy="68.4" r="1.6" fill="#fff" />
+          <ellipse
+            cx="37"
+            cy="82"
+            rx="8"
+            ry="4.6"
+            fill="#ff7e9a"
+            opacity="0.8"
+          />
+          <ellipse
+            cx="83"
+            cy="82"
+            rx="8"
+            ry="4.6"
+            fill="#ff7e9a"
+            opacity="0.8"
+          />
+          <path
+            d="M53 80q7 8 14 0"
+            fill="none"
+            stroke="#3a220d"
+            stroke-width="3.2"
+            stroke-linecap="round"
+          />
+        </svg>
+        <p class="intro-line">
+          Có một món quà Trung Thu nhỏ xíu<br />dành riêng cho
+          <strong id="introTo"></strong>
+        </p>
+        <button class="btn" id="openBtn" type="button">Mở quà ạ ♥</button>
+      </div>
+    </div>
+
+    <main class="content" id="content">
+      <section class="hero">
+        <h1 class="hero-title gold-text">Trung Thu vui vẻ nhoaaa~</h1>
+        <p class="hero-name" id="heroName"></p>
+        <p class="counter" id="counter">
+          Mình đã bên nhau <b id="days"></b> ngày rồi í ><
+        </p>
+        <p class="hint">Chạm vào trăng, thỏ ngọc hay lồng đèn nhé ạ</p>
+        <span class="cue" aria-hidden="true"></span>
+      </section>
+
+      <section class="flow" id="flow"></section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <button
+      class="music"
+      id="musicBtn"
+      type="button"
+      aria-label="Bật hoặc tắt nhạc nền"
+      aria-pressed="false"
+    >
+      <span>♪</span>
+    </button>
+    <audio id="bgm" loop preload="none"></audio>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="Xem ảnh">
+      <img id="lightboxImg" alt="" />
+      <button class="close" type="button" aria-label="Đóng">×</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      const CONFIG = {
+        loveName: "Gomii 🎀✨",
+        myName: "Em iu của chị",
+        startDate: "2026-08-09",
+        music: "",
+        photos: [
+          {
+            src: "./3.jpg",
+            caption:
+              "Lần đầu mình cùng nhau ngắm trăng. Trăng hôm đó đẹp hơn khi có c bên cạnhhh",
+          },
+          { src: "./4.jpg", caption: "Bế c lên nè, đứng lâu mỏi chânnn :>" },
+          { src: "./2.jpg", caption: "Ngàu dạ :v" },
+          {
+            src: "./1.jpg",
+            caption: "Giỏi ghê tr, chị chụp lén được em lúc ngủ r đó :>",
+          },
+        ],
+        wishes: [
+          "Chúc tình iu của em Trung Thu ngọt ngào như chiếc bánh nướng nhân đậu xanh <3",
+          "Trăng đêm nay tròn lắm, em ước có thể cùng chị đi rước đèn :>",
+          "Mong my love luôn rực rỡ như ngọn đèn lồng, còn em xin làm người cầm đèn đi cạnh chị <3",
+          "Chị Hằng có thỏ ngọc, còn em có chị. Em thấy mình may mắn hơn nhiều",
+          "Trung Thu nào em cũng muốn cùng chị phá cỗ, ngắm trăng. Tối nay được đón Trung thu cùng với chị là điều mà em thấy hạnh phúc nhất. Mãi như vậy nhé c iu <3",
+          "Chúc chị mau khoẻ, ăn no, ngủ ngon, mơ đẹp, cười thật nhiều và nhớ em thật nhiều <3",
+        ],
+        tapWishes: [
+          "Thỏ ngọc thì thầm: chị là người đáng yêu nhất đêm nay",
+          "Trăng tròn rồi, còn em thì tròn đầy vì có chị ><",
+          "Lồng đèn bảo: chị cười lên đi, đêm nay sẽ sáng hơn nhiều ><",
+          "Ước gì Trung Thu nào cũng có chị chơi gem cùng <3",
+          "Bí mật nhé: bánh dẻo nhân đậu xanh cũng không ngọt bằng chị <3",
+          "Em nhớ chị cả ngày lẫn trong mơ, thỏ ngọc làm chứng đó <3",
+          "Gió đêm nay mang theo một cái ôm gửi chị cùng ngàn cái hôn lên má <3",
+          "Chạm thêm lần nữa đi, em còn nhiều lời muốn nói lắm <3",
+        ],
+        letter: [
+          "Chị iu của em àaaa <3, Trung Thu năm nay em không có nhiều thứ để tặng, chỉ có một trang web nho nhỏ, vài tấm ảnh và thật nhiều thương.",
+          "Ngày trước em nghĩ trăng là thứ đẹp nhất mỗi đêm rằm. Từ khi có chị, em thấy trăng cũng phải nhường một chút, vì chị còn đáng yêu hơn trăng.",
+          "Cảm ơn chị đã luôn ở bên em, chịu nghe em nói linh tinh và bao dung những lúc em sai lầm :<. Mong những đêm rằm sau này, mình vẫn cùng nhau rước đèn, phá cỗ và ngắm trăng như hôm nay.",
+        ],
+      };
+
+      const RING = { radius: 3.3, tilt: -1.2 };
+      const BURST_GLYPHS = ["🎀", "✨"];
+      const photos = CONFIG.photos.map((photo, index) => ({
+        src: photo.src || placeholderPhoto(index + 1),
+        caption: photo.caption || "",
+      }));
+      const isLowPower =
+        matchMedia("(pointer: coarse)").matches ||
+        innerWidth < 700 ||
+        (navigator.hardwareConcurrency || 8) <= 4;
+      const reducedMotion = matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const motion = reducedMotion ? 0.25 : 1;
+      const state = {
+        musicOn: false,
+        opened: false,
+        width: 0,
+        tap: null,
+        lastTap: -1,
+        toastTimer: 0,
+      };
+      const observer =
+        "IntersectionObserver" in window
+          ? new IntersectionObserver(onReveal, {
+              threshold: 0.25,
+              rootMargin: "0px 0px -6% 0px",
+            })
+          : null;
+      const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+      const clickable = [];
+      const lanterns = [];
+
+      let scene, camera, renderer, clock, raycaster, ndc;
+      let moonGroup, rabbit, dust;
+      let stars = [];
+      let moonBase = 1.5;
+      let dotTex, sparkleTex, glowTex, lanternFaceTex, lanternGlowMat;
+
+      fillText();
+      buildFlow();
+      bindEvents();
+      startScene();
+
+      function fillText() {
+        document.title = `Trung Thu có ${CONFIG.loveName}`;
+        $("#introTo").textContent = CONFIG.loveName;
+        $("#heroName").textContent = CONFIG.loveName;
+        const days = daysTogether();
+        if (days === null) $("#counter").hidden = true;
+        else $("#days").textContent = days.toLocaleString("vi-VN");
+      }
+
+      function buildFlow() {
+        const flow = $("#flow");
+        const perPhoto = Math.ceil(
+          CONFIG.wishes.length / Math.max(photos.length, 1),
+        );
+        let wishCount = 0;
+        const addWish = (text) => {
+          const className = wishCount % 2 ? "wish gold" : "wish";
+          wishCount += 1;
+          flow.appendChild(fallLine("p", className, text, "char", 34));
+        };
+        photos.forEach((photo, index) => {
+          flow.appendChild(buildShot(photo, index));
+          CONFIG.wishes
+            .slice(index * perPhoto, (index + 1) * perPhoto)
+            .forEach(addWish);
+        });
+        if (!photos.length) CONFIG.wishes.forEach(addWish);
+        flow.appendChild(
+          fallLine("h2", "letter-title", `Gửi ${CONFIG.loveName}`, "char", 45),
+        );
+        CONFIG.letter.forEach((text) =>
+          flow.appendChild(fallLine("p", "letter-line", text, "word", 70)),
+        );
+        flow.appendChild(fallLine("p", "signature", CONFIG.myName, "char", 60));
+        flow.appendChild(
+          fallLine(
+            "p",
+            "foot-line",
+            "Đêm rằm tháng Tám, trăng tròn và có Gomii 🎀✨.",
+            "word",
+            90,
+          ),
+        );
+        flow.querySelectorAll(".fall, .shot").forEach(reveal);
+      }
+
+      function buildShot(photo, index) {
+        const shot = document.createElement("figure");
+        const image = document.createElement("img");
+        shot.className = `shot ${index % 2 ? "right" : "left"}`;
+        shot.style.setProperty("--tilt", `${index % 2 ? 3 : -3}deg`);
+        image.src = photo.src;
+        image.alt = photo.caption || `Ảnh ${index + 1}`;
+        image.decoding = "async";
+        shot.appendChild(image);
+        if (photo.caption)
+          shot.appendChild(fallLine("p", "cap", photo.caption, "char", 28));
+        shot.addEventListener("click", () => openLightbox(photo.src));
+        return shot;
+      }
+
+      function bindEvents() {
+        const stage = $("#stage");
+        $("#openBtn").addEventListener("click", openGift);
+        $("#lightbox").addEventListener("click", closeLightbox);
+        $("#musicBtn").addEventListener("click", () =>
+          setMusic(!state.musicOn),
+        );
+        stage.addEventListener("pointerdown", onTapStart);
+        stage.addEventListener("pointerup", onTapEnd);
+        addEventListener("pointermove", onPointerMove);
+        addEventListener("keydown", onKey);
+        addEventListener("resize", onResize);
+        if (CONFIG.music) $("#bgm").src = CONFIG.music;
+        else $("#musicBtn").hidden = true;
+      }
+
+      function startScene() {
+        try {
+          initScene();
+          animate();
+        } catch (error) {
+          console.warn("Không dựng được cảnh 3D", error);
+        }
+      }
+
+      function openGift() {
+        if (state.opened) return;
+        state.opened = true;
+        window.scrollTo(0, 0);
+        document.body.classList.add("opened");
+        $("#intro").classList.add("gone");
+        if (CONFIG.music) setMusic(true);
+        burst(innerWidth / 2, innerHeight / 2, 16);
+        setTimeout(() => $("#intro").remove(), 1300);
+      }
+
+      function openLightbox(src) {
+        $("#lightboxImg").src = src;
+        $("#lightbox").classList.add("open");
+      }
+
+      function closeLightbox() {
+        $("#lightbox").classList.remove("open");
+      }
+
+      function setMusic(on) {
+        const audio = $("#bgm");
+        if (!on) {
+          audio.pause();
+          paintMusic(false);
+          return;
+        }
+        audio
+          .play()
+          .then(() => paintMusic(true))
+          .catch(() => paintMusic(false));
+      }
+
+      function paintMusic(on) {
+        state.musicOn = on;
+        $("#musicBtn").classList.toggle("on", on);
+        $("#musicBtn").setAttribute("aria-pressed", String(on));
+      }
+
+      function showToast(text) {
+        const toast = $("#toast");
+        toast.textContent = text;
+        toast.classList.add("show");
+        clearTimeout(state.toastTimer);
+        state.toastTimer = setTimeout(
+          () => toast.classList.remove("show"),
+          3800,
+        );
+      }
+
+      function burst(x, y, count) {
+        const total = isLowPower ? Math.ceil(count * 0.6) : count;
+        for (let i = 0; i < total; i++) {
+          const heart = document.createElement("span");
+          heart.className = "pop";
+          heart.textContent =
+            BURST_GLYPHS[Math.floor(Math.random() * BURST_GLYPHS.length)];
+          heart.style.left = `${x}px`;
+          heart.style.top = `${y}px`;
+          heart.style.fontSize = `${rand(14, 30)}px`;
+          heart.style.color = Math.random() < 0.65 ? "#f3d98b" : "#ff9fb2";
+          heart.style.setProperty("--dx", `${rand(-80, 80)}px`);
+          heart.style.setProperty("--dy", `${rand(-230, -90)}px`);
+          heart.style.setProperty("--rot", `${rand(-40, 40)}deg`);
+          heart.addEventListener("animationend", () => heart.remove());
+          document.body.appendChild(heart);
+        }
+      }
+
+      function onTapStart(event) {
+        state.tap = { x: event.clientX, y: event.clientY };
+      }
+
+      function onTapEnd(event) {
+        const tap = state.tap;
+        state.tap = null;
+        if (!tap || !state.opened) return;
+        if (Math.hypot(event.clientX - tap.x, event.clientY - tap.y) > 10)
+          return;
+        handleTap(event.clientX, event.clientY);
+      }
+
+      function handleTap(x, y) {
+        const hit = pickObject(x, y);
+        burst(x, y, hit ? 12 : 6);
+        if (!hit) return;
+        reactTo(hit.object.userData);
+        showToast(nextTapWish());
+      }
+
+      function reactTo({ kind, owner }) {
+        if (kind === "rabbit") rabbit.userData.jump = 1;
+        if (kind === "moon") moonGroup.userData.pulse = 1;
+        if (kind === "lantern") owner.userData.bounce = 1;
+      }
+
+      function onPointerMove(event) {
+        pointer.tx = (event.clientX / innerWidth - 0.5) * 2;
+        pointer.ty = -(event.clientY / innerHeight - 0.5) * 2;
+      }
+
+      function onKey(event) {
+        if (state.opened && event.key === "Escape") closeLightbox();
+      }
+
+      function onResize() {
+        if (renderer) layout();
+      }
+
+      function initScene() {
+        renderer = new THREE.WebGLRenderer({
+          antialias: !isLowPower,
+          powerPreference: "high-performance",
+        });
+        renderer.setPixelRatio(
+          Math.min(window.devicePixelRatio || 1, isLowPower ? 1.5 : 2),
+        );
+        renderer.setClearColor(0x050404, 1);
+        $("#stage").appendChild(renderer.domElement);
+
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200);
+        clock = new THREE.Clock();
+        raycaster = new THREE.Raycaster();
+        ndc = new THREE.Vector2();
+
+        dotTex = dotTexture();
+        sparkleTex = sparkleTexture();
+        glowTex = glowTexture();
+        lanternFaceTex = lanternFaceTexture();
+        lanternGlowMat = new THREE.SpriteMaterial({
+          map: glowTex,
+          color: 0xffb640,
+          transparent: true,
+          opacity: 0.5,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        });
+
+        scene.add(new THREE.AmbientLight(0xffe9b8, 0.8));
+        const key = new THREE.DirectionalLight(0xfff2d0, 0.9);
+        key.position.set(2, 4, 7);
+        scene.add(key);
+
+        moonGroup = buildMoon();
+        rabbit = buildRabbit();
+        moonGroup.add(rabbit);
+        scene.add(moonGroup);
+
+        stars = [
+          buildStars(isLowPower ? 140 : 260, 0.55, dotTex, 0xffe9b0),
+          buildStars(isLowPower ? 22 : 40, 2.2, sparkleTex, 0xfbe9b0),
+        ];
+        stars.forEach((layer) => scene.add(layer));
+
+        dust = buildDust();
+        scene.add(dust);
+
+        const lanternCount = isLowPower ? 8 : 14;
+        for (let i = 0; i < lanternCount; i++) {
+          const lantern = buildLantern();
+          lanterns.push(lantern);
+          scene.add(lantern);
+        }
+
+        layout();
+      }
+
+      function layout() {
+        const aspect = innerWidth / innerHeight;
+        const portrait = aspect < 0.85;
+        const widthChanged = innerWidth !== state.width;
+        state.width = innerWidth;
+        camera.aspect = aspect;
+        camera.position.z = portrait ? 11 : 8.5;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+        moonGroup.userData.baseScale = portrait ? 0.7 : 1;
+        moonBase = portrait ? 2.0 : 1.5;
+        if (widthChanged)
+          lanterns.forEach((lantern) => seatLantern(lantern, true));
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const dt = Math.min(clock.getDelta(), 0.05);
+        const t = clock.elapsedTime;
+        updateCamera(dt);
+        updateMoon(t, dt);
+        updateRabbit(t, dt);
+        updateLanterns(t, dt);
+        updateSky(t, dt);
+        renderer.render(scene, camera);
+      }
+
+      function updateCamera(dt) {
+        const ease = Math.min(1, dt * 3);
+        pointer.x += (pointer.tx - pointer.x) * ease;
+        pointer.y += (pointer.ty - pointer.y) * ease;
+        camera.position.x = pointer.x * 0.8 * motion;
+        camera.position.y = pointer.y * 0.45 * motion;
+        camera.lookAt(0, 0, 0);
+      }
+
+      function updateMoon(t, dt) {
+        const data = moonGroup.userData;
+        data.pulse = Math.max(0, data.pulse - dt * 1.6);
+        moonGroup.position.y = moonBase + window.scrollY * 0.006;
+        moonGroup.scale.setScalar(
+          data.baseScale *
+            (1 +
+              Math.sin(t * 1.2) * 0.012 * motion +
+              Math.sin(data.pulse * Math.PI) * 0.06),
+        );
+        data.rings.forEach((ring) => {
+          ring.rotation.z += dt * ring.userData.spin * motion;
+        });
+        data.glow.material.opacity = 0.52 + Math.sin(t * 0.9) * 0.06 * motion;
+      }
+
+      function updateRabbit(t, dt) {
+        const data = rabbit.userData;
+        data.jump = Math.max(0, data.jump - dt * 1.7);
+        rabbit.position.y =
+          data.baseY + Math.sin((1 - data.jump) * Math.PI) * 0.6;
+        rabbit.scale.set(
+          data.scale,
+          data.scale * (1 + Math.sin(t * 2.2) * 0.02 * motion),
+          data.scale,
+        );
+        data.head.rotation.z = Math.sin(t * 1.1) * 0.06 * motion;
+        data.ears.forEach((ear, index) => {
+          ear.rotation.z =
+            ear.userData.rest + Math.sin(t * 1.8 + index * 1.4) * 0.09 * motion;
+        });
+      }
+
+      function updateLanterns(t, dt) {
+        lanterns.forEach((lantern) => {
+          const data = lantern.userData;
+          data.bounce = Math.max(0, data.bounce - dt * 1.8);
+          lantern.position.y += data.speed * dt * motion;
+          lantern.position.x =
+            data.baseX + Math.sin(t * 0.5 + data.phase) * 0.35 * motion;
+          lantern.rotation.y = Math.sin(t * 0.6 + data.phase) * 0.5 * motion;
+          lantern.rotation.z = Math.sin(t * 0.8 + data.phase) * 0.07 * motion;
+          lantern.scale.setScalar(
+            data.scale * (1 + Math.sin(data.bounce * Math.PI) * 0.3),
+          );
+          if (lantern.position.y > data.top) seatLantern(lantern, false);
+        });
+      }
+
+      function updateSky(t, dt) {
+        stars[0].material.opacity = 0.75 + Math.sin(t * 1.3) * 0.2 * motion;
+        stars[1].material.opacity = 0.6 + Math.sin(t * 2.1 + 1) * 0.35 * motion;
+        stars.forEach((layer) => {
+          layer.rotation.z += dt * 0.004 * motion;
+        });
+        const positions = dust.geometry.attributes.position;
+        const speeds = dust.userData.speeds;
+        for (let i = 0; i < speeds.length; i++) {
+          positions.array[i * 3 + 1] += speeds[i] * dt * motion;
+          positions.array[i * 3] += Math.sin(t + i) * 0.003 * motion;
+          if (positions.array[i * 3 + 1] > 6.5)
+            positions.array[i * 3 + 1] = -6.5;
+        }
+        positions.needsUpdate = true;
+      }
+
+      function buildMoon() {
+        const group = new THREE.Group();
+        group.userData = { pulse: 0, baseScale: 1, rings: [], glow: null };
+
+        const map = moonTexture();
+        const moon = new THREE.Mesh(
+          new THREE.SphereGeometry(1.8, 56, 40),
+          new THREE.MeshLambertMaterial({
+            map,
+            color: 0x555555,
+            emissive: 0xffffff,
+            emissiveMap: map,
+            emissiveIntensity: 0.55,
+          }),
+        );
+        moon.userData.kind = "moon";
+        clickable.push(moon);
+        group.add(moon);
+
+        const glow = new THREE.Sprite(
+          new THREE.SpriteMaterial({
+            map: glowTex,
+            color: 0xf3c25c,
+            transparent: true,
+            opacity: 0.55,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }),
+        );
+        glow.scale.set(9.5, 9.5, 1);
+        glow.position.z = -1;
+        group.add(glow);
+        group.userData.glow = glow;
+
+        group.userData.rings.push(
+          addRing(group, RING.radius, RING.tilt, 0.018, 0xe8c46a, 4, 0.5),
+          addRing(group, 2.75, 1.35, 0.012, 0xb98a2e, 3, -0.35),
+        );
+        return group;
+      }
+
+      function addRing(group, radius, tilt, tube, color, gems, spin) {
+        const pivot = new THREE.Group();
+        pivot.rotation.x = tilt;
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(radius, tube, 8, 200),
+          new THREE.MeshBasicMaterial({ color }),
+        );
+        ring.userData.spin = spin;
+        for (let i = 0; i < gems; i++) {
+          const angle = (i / gems) * Math.PI * 2;
+          const gem = new THREE.Sprite(
+            new THREE.SpriteMaterial({
+              map: sparkleTex,
+              color: 0xfff0b8,
+              transparent: true,
+              depthWrite: false,
+            }),
+          );
+          gem.scale.set(0.5, 0.5, 1);
+          gem.position.set(
+            Math.cos(angle) * radius,
+            Math.sin(angle) * radius,
+            0,
+          );
+          ring.add(gem);
+        }
+        pivot.add(ring);
+        group.add(pivot);
+        return ring;
+      }
+
+      function buildRabbit() {
+        const group = new THREE.Group();
+        const fur = new THREE.MeshLambertMaterial({
+          color: 0xfff1d0,
+          emissive: 0x2a2010,
+        });
+        const pink = new THREE.MeshLambertMaterial({
+          color: 0xff9fb2,
+          emissive: 0x3a1018,
+        });
+        const dark = new THREE.MeshBasicMaterial({ color: 0x2a1a10 });
+        const white = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+        const body = part(ball(0.42), fur, [0, 0.44, 0], [1, 1.05, 0.95]);
+        const head = new THREE.Group();
+        head.position.set(0, 1.0, 0.05);
+        head.add(part(ball(0.36), fur, [0, 0, 0], [1.12, 0.95, 1]));
+        head.add(part(ball(0.032), pink, [0, -0.03, 0.36]));
+
+        const ears = [];
+        [-1, 1].forEach((side) => {
+          const ear = new THREE.Group();
+          ear.position.set(side * 0.17, 0.28, 0);
+          ear.userData.rest = -side * 0.2;
+          ear.add(part(ball(0.11), fur, [0, 0.24, 0], [0.8, 2.5, 0.55]));
+          ear.add(part(ball(0.075), pink, [0, 0.24, 0.045], [0.6, 2.2, 0.3]));
+          head.add(ear);
+          ears.push(ear);
+          head.add(part(ball(0.05), dark, [side * 0.15, 0.03, 0.325]));
+          head.add(
+            part(ball(0.017), white, [side * 0.15 + 0.015, 0.05, 0.365]),
+          );
+          head.add(
+            part(ball(0.06), pink, [side * 0.23, -0.08, 0.28], [1.3, 0.8, 0.4]),
+          );
+          group.add(
+            part(ball(0.1), fur, [side * 0.3, 0.5, 0.3], [0.9, 1.1, 0.9]),
+          );
+          group.add(
+            part(ball(0.13), fur, [side * 0.2, 0.08, 0.28], [1, 0.6, 1.4]),
+          );
+        });
+
+        group.add(body, head, part(ball(0.11), fur, [0, 0.36, -0.4]));
+
+        const x = 1.05;
+        const depth = Math.sqrt(RING.radius ** 2 - x ** 2);
+        group.position.set(
+          x,
+          -depth * Math.cos(RING.tilt),
+          -depth * Math.sin(RING.tilt),
+        );
+        group.rotation.y = -0.4;
+        group.userData = {
+          head,
+          ears,
+          jump: 0,
+          scale: 0.62,
+          baseY: group.position.y,
+        };
+        group.scale.setScalar(0.62);
+        group.traverse((mesh) => {
+          if (!mesh.isMesh) return;
+          mesh.userData.kind = "rabbit";
+          clickable.push(mesh);
+        });
+        return group;
+      }
+
+      function buildLantern() {
+        const group = new THREE.Group();
+        const shell = new THREE.MeshLambertMaterial({
+          color: 0xf0a830,
+          emissive: 0x7a3d06,
+        });
+        const trim = new THREE.MeshLambertMaterial({ color: 0x8a5312 });
+
+        const body = new THREE.Mesh(ball(0.5), shell);
+        body.scale.set(1, 0.86, 1);
+        body.userData = { kind: "lantern", owner: group };
+        clickable.push(body);
+        group.add(body);
+
+        const ribs = new THREE.Group();
+        ribs.scale.set(1, 0.86, 1);
+        for (let i = 0; i < 3; i++) {
+          const rib = new THREE.Mesh(
+            new THREE.TorusGeometry(0.5, 0.012, 6, 32),
+            new THREE.MeshBasicMaterial({ color: 0x8a5312 }),
+          );
+          rib.rotation.y = (i * Math.PI) / 3;
+          ribs.add(rib);
+        }
+        group.add(ribs);
+
+        group.add(
+          part(
+            new THREE.CylinderGeometry(0.2, 0.24, 0.1, 16),
+            trim,
+            [0, 0.45, 0],
+          ),
+        );
+        group.add(
+          part(
+            new THREE.CylinderGeometry(0.24, 0.2, 0.1, 16),
+            trim,
+            [0, -0.45, 0],
+          ),
+        );
+        group.add(
+          part(
+            new THREE.CylinderGeometry(0.012, 0.012, 0.35, 6),
+            new THREE.MeshBasicMaterial({ color: 0xe8c46a }),
+            [0, -0.65, 0],
+          ),
+        );
+        group.add(
+          part(
+            ball(0.06),
+            new THREE.MeshBasicMaterial({ color: 0xff9fb2 }),
+            [0, -0.85, 0],
+          ),
+        );
+
+        const face = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.55, 0.55),
+          new THREE.MeshBasicMaterial({
+            map: lanternFaceTex,
+            transparent: true,
+            depthWrite: false,
+          }),
+        );
+        face.position.z = 0.505;
+        group.add(face);
+
+        const glow = new THREE.Sprite(lanternGlowMat);
+        glow.scale.set(2.4, 2.4, 1);
+        glow.position.z = -0.2;
+        group.add(glow);
+
+        group.userData = {
+          speed: rand(0.25, 0.55),
+          phase: rand(0, Math.PI * 2),
+          scale: rand(1.1, 2),
+          z: -1 - rand(0, 8),
+          bounce: 0,
+          baseX: 0,
+          top: 0,
+        };
+        return group;
+      }
+
+      function seatLantern(lantern, anywhere) {
+        const data = lantern.userData;
+        const halfH =
+          (camera.position.z - data.z) *
+          Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+        const halfW = halfH * camera.aspect;
+        data.baseX = rand(-1, 1) * halfW * 0.95;
+        data.top = halfH + 1.6;
+        lantern.position.set(
+          data.baseX,
+          anywhere ? rand(-1, 1) * halfH : -halfH - 1.4,
+          data.z,
+        );
+      }
+
+      function buildStars(count, size, map, color) {
+        const positions = new Float32Array(count * 3);
+        for (let i = 0; i < count; i++) {
+          positions[i * 3] = rand(-55, 55);
+          positions[i * 3 + 1] = rand(-35, 35);
+          positions[i * 3 + 2] = -14 - rand(0, 40);
+        }
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(positions, 3),
+        );
+        const material = new THREE.PointsMaterial({
+          size,
+          map,
+          color,
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+        });
+        return new THREE.Points(geometry, material);
+      }
+
+      function buildDust() {
+        const count = isLowPower ? 40 : 90;
+        const positions = new Float32Array(count * 3);
+        const speeds = new Float32Array(count);
+        for (let i = 0; i < count; i++) {
+          positions[i * 3] = rand(-9, 9);
+          positions[i * 3 + 1] = rand(-6.5, 6.5);
+          positions[i * 3 + 2] = rand(-5, 3);
+          speeds[i] = rand(0.1, 0.35);
+        }
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(positions, 3),
+        );
+        const points = new THREE.Points(
+          geometry,
+          new THREE.PointsMaterial({
+            size: 0.16,
+            map: dotTex,
+            color: 0xffdf90,
+            transparent: true,
+            opacity: 0.85,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+          }),
+        );
+        points.userData.speeds = speeds;
+        return points;
+      }
+
+      function moonTexture() {
+        const width = isLowPower ? 1024 : 2048;
+        return canvasTexture(width, width / 2, (ctx) => {
+          const k = width / 2048;
+          ctx.scale(k, k);
+          const shade = ctx.createLinearGradient(0, 0, 0, 1024);
+          shade.addColorStop(0, "#f9dc84");
+          shade.addColorStop(0.5, "#f0c862");
+          shade.addColorStop(1, "#dba63f");
+          ctx.fillStyle = shade;
+          ctx.fillRect(0, 0, 2048, 1024);
+          drawCraters(ctx);
+          drawMoonFace(ctx);
+        });
+      }
+
+      function drawCraters(ctx) {
+        for (let i = 0; i < 30; i++) {
+          const x = rand(60, 1000);
+          const y = rand(140, 880);
+          const r = rand(24, 80);
+          if (Math.abs(x - 512) < 340 && Math.abs(y - 470) < 300) continue;
+          ctx.fillStyle = "rgba(190, 132, 36, 0.28)";
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = "rgba(255, 240, 180, 0.5)";
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.arc(x - 4, y - 4, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      function drawMoonFace(ctx) {
+        ctx.strokeStyle = "#5a3a12";
+        ctx.lineCap = "round";
+        ctx.lineWidth = 14;
+        [-100, 100].forEach((offset) => {
+          ctx.beginPath();
+          ctx.arc(512 + offset, 425, 30, Math.PI, 0);
+          ctx.stroke();
+        });
+        ctx.lineWidth = 10;
+        [-16, 16].forEach((offset) => {
+          ctx.beginPath();
+          ctx.arc(512 + offset, 462, 16, 0, Math.PI);
+          ctx.stroke();
+        });
+        ctx.fillStyle = "rgba(255, 130, 150, 0.8)";
+        [-180, 180].forEach((offset) => {
+          ctx.beginPath();
+          ctx.ellipse(512 + offset, 470, 40, 24, 0, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      function lanternFaceTexture() {
+        return canvasTexture(128, 128, (ctx) => {
+          ctx.fillStyle = "#3a220d";
+          [44, 84].forEach((x) => {
+            ctx.beginPath();
+            ctx.arc(x, 58, 8, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.fillStyle = "#ffffff";
+          [47, 87].forEach((x) => {
+            ctx.beginPath();
+            ctx.arc(x, 55, 2.6, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.fillStyle = "rgba(255, 120, 150, 0.85)";
+          [26, 102].forEach((x) => {
+            ctx.beginPath();
+            ctx.ellipse(x, 80, 12, 7, 0, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.strokeStyle = "#3a220d";
+          ctx.lineWidth = 5;
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.arc(64, 72, 10, 0.15 * Math.PI, 0.85 * Math.PI);
+          ctx.stroke();
+        });
+      }
+
+      function dotTexture() {
+        return canvasTexture(64, 64, (ctx) => {
+          const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+          gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
+          gradient.addColorStop(0.4, "rgba(255, 255, 255, 0.6)");
+          gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, 64, 64);
+        });
+      }
+
+      function glowTexture() {
+        return canvasTexture(256, 256, (ctx) => {
+          const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+          gradient.addColorStop(0, "rgba(255, 255, 255, 0.9)");
+          gradient.addColorStop(0.35, "rgba(255, 255, 255, 0.28)");
+          gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, 256, 256);
+        });
+      }
+
+      function sparkleTexture() {
+        return canvasTexture(128, 128, (ctx) => {
+          const c = 64;
+          const gradient = ctx.createRadialGradient(c, c, 0, c, c, c * 0.55);
+          gradient.addColorStop(0, "rgba(255, 255, 255, 0.9)");
+          gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, 128, 128);
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.moveTo(c, 4);
+          ctx.quadraticCurveTo(c, c, 124, c);
+          ctx.quadraticCurveTo(c, c, c, 124);
+          ctx.quadraticCurveTo(c, c, 4, c);
+          ctx.quadraticCurveTo(c, c, c, 4);
+          ctx.fill();
+        });
+      }
+
+      function pickObject(x, y) {
+        ndc.set((x / innerWidth) * 2 - 1, -(y / innerHeight) * 2 + 1);
+        raycaster.setFromCamera(ndc, camera);
+        return raycaster.intersectObjects(clickable, false)[0] || null;
+      }
+
+      function nextTapWish() {
+        const list = CONFIG.tapWishes;
+        let index = Math.floor(Math.random() * list.length);
+        if (list.length > 1 && index === state.lastTap)
+          index = (index + 1) % list.length;
+        state.lastTap = index;
+        return list[index];
+      }
+
+      function daysTogether() {
+        const start = new Date(CONFIG.startDate);
+        if (Number.isNaN(start.getTime())) return null;
+        return Math.max(
+          0,
+          Math.floor((Date.now() - start.getTime()) / 86400000),
+        );
+      }
+
+      function placeholderPhoto(number) {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500"><defs><radialGradient id="g" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#3a2a10"/><stop offset="1" stop-color="#0c0804"/></radialGradient></defs><rect width="400" height="500" fill="url(#g)"/><circle cx="200" cy="190" r="72" fill="#e8c46a"/><path d="M200 218C168 194 174 166 193 166C197 166 200 170 200 174C200 170 203 166 207 166C226 166 232 194 200 218Z" fill="#ff9fb2"/><text x="200" y="330" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#f6e7c1">Ảnh số ${number}</text><text x="200" y="368" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="#a87b24">Thay bằng ảnh của hai bạn</text></svg>`;
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      }
+
+      function fallLine(tag, className, text, mode, step) {
+        const element = document.createElement(tag);
+        element.className = className;
+        fall(element, text, mode, step);
+        return element;
+      }
+
+      function fall(element, text, mode, step) {
+        const words = text.split(" ");
+        let index = 0;
+        element.classList.add("fall");
+        element.setAttribute("aria-label", text);
+        words.forEach((word, position) => {
+          const holder = document.createElement("span");
+          holder.className = "w";
+          holder.setAttribute("aria-hidden", "true");
+          (mode === "char" ? Array.from(word) : [word]).forEach((piece) => {
+            const unit = document.createElement("span");
+            unit.className = "u";
+            unit.textContent = piece;
+            unit.style.setProperty("--d", `${Math.min(index * step, 2600)}ms`);
+            index += 1;
+            holder.appendChild(unit);
+          });
+          element.appendChild(holder);
+          if (position < words.length - 1)
+            element.appendChild(document.createTextNode(" "));
+        });
+      }
+
+      function reveal(element) {
+        if (observer) observer.observe(element);
+        else element.classList.add("in");
+      }
+
+      function onReveal(entries) {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("in");
+          observer.unobserve(entry.target);
+        });
+      }
+
+      function canvasTexture(width, height, draw) {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        draw(canvas.getContext("2d"), width, height);
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.anisotropy = 4;
+        return texture;
+      }
+
+      function part(geometry, material, position, scale) {
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(position[0], position[1], position[2]);
+        if (scale) mesh.scale.set(scale[0], scale[1], scale[2]);
+        return mesh;
+      }
+
+      function ball(radius) {
+        return new THREE.SphereGeometry(radius, 24, 18);
+      }
+
+      function rand(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function $(selector) {
+        return document.querySelector(selector);
+      }
+    </script>
+  </body>
+</html>

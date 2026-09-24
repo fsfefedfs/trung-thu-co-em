@@ -232,12 +232,14 @@
         z-index: 2;
         width: var(--w);
         aspect-ratio: 3 / 2;
-        margin-top: calc(var(--w) * 0.55);
+        margin-top: calc(var(--w) * 0.45);
         opacity: 0;
         transform: translateY(60px) rotate(4deg) scale(0.92);
         transition:
           transform 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.12),
           opacity 0.5s ease;
+        perspective: 1000px;
+        transform-style: preserve-3d;
       }
       .gate.show .env {
         opacity: 1;
@@ -286,22 +288,28 @@
         width: 100%;
         height: 55%;
         z-index: 6;
-        transform-origin: 50% 0;
+        transform-origin: top center;
         transform-style: preserve-3d;
-        transform: perspective(900px) rotateX(0deg);
+        transform: rotateX(0deg);
         transition:
-          transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-          z-index 0s 0.3s;
+          transform 0.85s cubic-bezier(0.34, 1.15, 0.64, 1),
+          z-index 0s 0.4s;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
       }
       .gate.env-open .flap {
-        transform: perspective(900px) rotateX(180deg);
+        transform: rotateX(180deg);
         z-index: 2;
+        filter: drop-shadow(0 -3px 6px rgba(0, 0, 0, 0.15));
       }
       .face {
         position: absolute;
         inset: 0;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
+        transform-style: preserve-3d;
+      }
+      .face.out {
+        transform: rotateX(0deg);
       }
       .face.in {
         transform: rotateX(180deg);
@@ -339,26 +347,32 @@
       /* lớp 2: giấy thư trượt ra */
       .paper-clip {
         position: absolute;
-        left: -6%;
-        right: -6%;
+        left: 0;
+        right: 0;
         bottom: 0;
-        height: calc(var(--w) * 1.4);
+        height: calc(var(--w) * 1.55);
         overflow: hidden;
         z-index: 3;
+        pointer-events: none;
+      }
+      .gate.env-top .paper-clip {
+        z-index: 8;
+        overflow: visible;
       }
       .paper {
         --py: calc(var(--w) * 0.92);
         position: absolute;
         left: 50%;
         bottom: calc(var(--w) * 0.04);
-        width: calc(var(--w) * 0.9);
-        margin-left: calc(var(--w) * -0.45);
-        height: calc(var(--w) * 1.05);
-        padding: calc(var(--w) * 0.075) calc(var(--w) * 0.06) 0
-          calc(var(--w) * 0.15);
+        width: calc(var(--w) * 0.88);
+        margin-left: calc(var(--w) * -0.44);
+        min-height: calc(var(--w) * 1.05);
+        height: auto;
+        padding: calc(var(--w) * 0.075) calc(var(--w) * 0.06) calc(var(--w) * 0.08)
+          calc(var(--w) * 0.14);
         pointer-events: auto;
         color: var(--ink);
-        border-radius: 3px;
+        border-radius: 4px;
         background:
           linear-gradient(
             90deg,
@@ -373,13 +387,24 @@
           ),
           linear-gradient(180deg, #fffaf0, #f8e8c0);
         box-shadow:
-          0 2px 0 rgba(168, 123, 36, 0.3),
-          0 10px 26px rgba(0, 0, 0, 0.4);
+          0 4px 18px rgba(0, 0, 0, 0.35),
+          0 0 0 1px rgba(168, 123, 36, 0.2);
         transform: translateY(var(--py)) rotate(-3.5deg);
-        transition: transform 1s cubic-bezier(0.2, 0.9, 0.2, 1);
+        transition: transform 0.8s cubic-bezier(0.33, 1, 0.68, 1);
       }
       .gate.env-out .paper {
-        --py: calc(var(--w) * -0.09);
+        --py: calc(var(--w) * -0.18);
+        transform: translateY(var(--py)) rotate(-1.5deg);
+      }
+      .gate.env-top .paper {
+        --py: calc(var(--w) * -0.18);
+        transform: translateY(var(--py)) rotate(-1.5deg) scale(1.02);
+        box-shadow:
+          0 12px 32px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(168, 123, 36, 0.3);
+        transition:
+          transform 0.4s cubic-bezier(0.34, 1.3, 0.64, 1),
+          box-shadow 0.4s ease;
       }
       .gate.done .paper {
         --py: calc(var(--w) * -1.1);
@@ -475,14 +500,19 @@
         color: var(--rose);
       }
       .p-hint {
-        margin-top: 6px;
-        padding: 6px 10px;
-        border-radius: 10px;
-        background: #fff3c4;
-        border: 1px dashed var(--gold-lo);
-        font-size: 0.8rem;
+        position: relative;
+        z-index: 25;
+        margin-top: 10px;
+        padding: 8px 12px;
+        border-radius: 12px;
+        background: #fff8d6;
+        border: 1.5px dashed var(--gold-lo);
+        color: #4a2e00;
+        font-size: 0.82rem;
         line-height: 1.5;
-        animation: hintIn 0.35s ease both;
+        font-weight: 500;
+        box-shadow: 0 4px 14px rgba(168, 123, 36, 0.22);
+        animation: hintIn 0.4s cubic-bezier(0.34, 1.4, 0.64, 1) both;
       }
       .p-hint[hidden],
       .bulb[hidden] {
@@ -500,6 +530,7 @@
         background: #fff3c4;
         border: 2px solid var(--gold);
         box-shadow: 0 0 14px rgba(255, 200, 60, 0.7);
+        z-index: 26;
         animation: bulbPop 0.5s ease both;
       }
       .bulb svg {
@@ -1172,32 +1203,52 @@
             <svg viewBox="0 0 360 132" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="fo" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#f9edcb" />
-                  <stop offset="1" stop-color="#e9cf90" />
+                  <stop offset="0" stop-color="#fdf6e2" />
+                  <stop offset="0.6" stop-color="#f5e2b8" />
+                  <stop offset="1" stop-color="#e7ca8c" />
                 </linearGradient>
-                <linearGradient id="fi" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#f7b0c2" />
-                  <stop offset="1" stop-color="#f28aa5" />
-                </linearGradient>
+                <filter id="flap-shadow" x="-10%" y="-10%" width="120%" height="130%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#2a1605" flood-opacity="0.3"/>
+                </filter>
               </defs>
               <path
-                d="M0 0H360L180 132Z"
+                d="M 0 0 H 360 L 186 127 Q 180 133 174 127 Z"
                 fill="url(#fo)"
                 stroke="#b98a2e"
-                stroke-opacity="0.55"
+                stroke-opacity="0.65"
                 stroke-width="1.2"
+                filter="url(#flap-shadow)"
+              />
+              <path
+                d="M 14 6 H 346 L 184 117 Q 180 120 176 117 Z"
+                fill="none"
+                stroke="#b98a2e"
+                stroke-opacity="0.4"
+                stroke-width="1"
+                stroke-dasharray="4 4"
               />
             </svg>
           </div>
           <div class="face in">
             <svg viewBox="0 0 360 132" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="fi" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#f9b3c4" />
+                  <stop offset="1" stop-color="#ea87a1" />
+                </linearGradient>
+                <linearGradient id="crease-shadow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="rgba(0,0,0,0.28)" />
+                  <stop offset="0.25" stop-color="rgba(0,0,0,0)" />
+                </linearGradient>
+              </defs>
               <path
-                d="M0 0H360L180 132Z"
+                d="M 0 0 H 360 L 186 127 Q 180 133 174 127 Z"
                 fill="url(#fi)"
                 stroke="#b98a2e"
-                stroke-opacity="0.55"
+                stroke-opacity="0.5"
                 stroke-width="1.2"
               />
+              <rect x="0" y="0" width="360" height="28" fill="url(#crease-shadow)" />
             </svg>
           </div>
         </div>
@@ -1638,12 +1689,13 @@
         void g.offsetWidth;
         g.classList.add("show");
         gate.timers = [
-          setTimeout(() => g.classList.add("env-open"), 700),
-          setTimeout(() => g.classList.add("env-out"), 1300),
+          setTimeout(() => g.classList.add("env-open"), 500),
+          setTimeout(() => g.classList.add("env-out"), 1100),
+          setTimeout(() => g.classList.add("env-top"), 1900),
           setTimeout(() => {
             if (!matchMedia("(pointer: coarse)").matches)
               $("#pwInput").focus({ preventScroll: true });
-          }, 2300),
+          }, 2400),
         ];
       }
 
@@ -1652,7 +1704,7 @@
         gate.open = false;
         gate.timers.forEach(clearTimeout);
         const g = $("#gate");
-        g.classList.remove("show", "env-open", "env-out");
+        g.classList.remove("show", "env-open", "env-out", "env-top");
         setTimeout(() => {
           if (!gate.open) g.hidden = true;
         }, 450);
